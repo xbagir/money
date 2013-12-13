@@ -30,21 +30,21 @@ class MoneyServiceProvider extends ServiceProvider {
 	 */
     public function register()
     { 
-        $this->app['money'] = $this->app->share(function ($app)
-        {            
-            $config    = $app['config']->get('money::money.currency');
-            $converter = $app['money.converter'];
-
-            return new Manager($config, $converter);
-        });
-
         $this->app['money.converter'] = $this->app->share(function($app)
         {
             list($currencyCode, $exchangeRates) = $app['cache']->get($app['config']->get('money::money.cacheKey'));
                  
             return new Converter($currencyCode, $exchangeRates);
         });
-                
+
+        $this->app['money'] = $this->app->share(function ($app)
+        {
+            $config    = $app['config']->get('money::money.currency');
+            $converter = $app['money.converter'];
+
+            return new Manager($config, $converter);
+        });
+        
         $this->app['command.money.exchange-rates'] = $this->app->share(function($app)
         {
             return new MakeExchangeRatesCommand($app['cache'], $app['config']->get('money::money.cacheKey'));
