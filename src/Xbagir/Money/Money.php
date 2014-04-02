@@ -19,6 +19,11 @@ class Money
     {
         return $this->amount;
     }
+
+    public function amountFormat($decimals = 0, $decPoint = '.', $thousandsSep = ' ') 
+    {
+        return number_format($this->amount, $decimals,  $decPoint, $thousandsSep );
+    }
     
     public function currency()
     {
